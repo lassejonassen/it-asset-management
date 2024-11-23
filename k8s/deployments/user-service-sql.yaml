@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-sql
+  namespace: it-asset-management
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service-sql
+  template:
+    metadata:
+      labels:
+        app: user-service-sql
+    spec:
+      containers:
+        - name: user-service-sql
+          image: mcr.microsoft.com/mssql/server:2019-latest
+          resources:
+            limits:
+              memory: '2G'
+              cpu: '500m'
+          ports:
+            - containerPort: 1433
+          env:
+            - name: MSSQL_PID
+              value: 'Express'
+            - name: ACCEPT_EULA
+              value: 'Y'
+            - name: MSSQL_SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: user-service-sql
+                  key: sa-password
+          volumeMounts:
+            - name: mssqldb
+              mountPath: /var/opt/mssql
+      volumes:
+        - name: mssqldb
+          persistentVolumeClaim:
+            claimName: user-service

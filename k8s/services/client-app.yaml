@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-app-svc
+  namespace: it-asset-management
+  labels:
+    app: client-app
+spec:
+  selector:
+    app: client-app
+  ports:
+    - port: 80
+      targetPort: 80

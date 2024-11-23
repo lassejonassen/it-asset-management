@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service-sql-svc
+  namespace: it-asset-management
+spec:
+  type: ClusterIP
+  selector:
+    app: user-service-sql
+  ports:
+    - name: user-service-sql
+      protocol: TCP
+      port: 1433
+      targetPort: 1433

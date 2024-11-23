@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentication
+  namespace: it-asset-management
+  labels:
+    app: authentication
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authentication
+  template:
+    metadata:
+      labels:
+        app: authentication
+    spec:
+      containers:
+        - name: authentication
+          image: lassejonassen/authentication:v1.0.0
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: '128Mi'
+              cpu: '500m'
+          ports:
+            - containerPort: 80
+          env:
+            - name: connectionstring
+              valueFrom:
+                secretKeyRef:
+                  name: user-service-sql
+                  key: connectionstring
+            - name: jwtsecretkey
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: jwtsecretkey
